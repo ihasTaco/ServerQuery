@@ -12,8 +12,6 @@ This folder contains all the bot's code, including the commands it supports (com
 
 For specific details on how to install, configure, and use this Discord bot, refer to the sections below.
 
-[Join our Royal Productions Bot Discord server!](https://discord.gg/uJ96tnTP6G)
-
 ## Installation
 To install the bot's dependencies, navigate to the 'discord' directory in your terminal and run npm install. This command will install all the necessary dependencies listed in the package.json file.
 
@@ -40,12 +38,34 @@ The bot's configuration settings are stored in a .env file. For guidance on how 
 * **Offline Server Query Handling**: If a server is offline, the server query will not overwrite the server info, ensuring that all field contents remain filled with useful information.
 * **Customizable Embeds**: The bot uses all elements from the server settings config to customize the embed. For example, if a user sets a specific emoji to display on a certain field, it will show up in that field.
 
-These features makes ServerQuery versatile, user-friendly, and powerful in delivering comprehensive server information. As we continue to develop ServerQuery, we will add more features to enhance its capabilities and deliver an even better user experience.
+These features make the ServerQuery Bot versatile, user-friendly, and powerful in delivering comprehensive server information. As we continue to develop the bot, we will add more features to enhance its capabilities and deliver an even better user experience.
 
 Remember, if you have a feature you'd like to see, don't hesitate to contribute or suggest it! We're always open to new ideas and improvements.
 
+## Upcoming Features
+* **Enhanced Graph Types**: We plan to add a variety of new graph types to cater to different data visualization needs, including stacked area graphs, line graphs, bar graphs, scatter plots, bubble charts, density plots, and candlestick charts.
+
+* **Logging System**: A new logging system will send updates to a specified channel whenever anything changes in the dashboard. This will also include a local logging system for debugging the bot and all its components.
+
+* **Alerts**: We aim to introduce a comprehensive alert system, including activity alerts, server uptime alerts, server restart suggestions, latency alerts, server health metrics alerts, rate limit alerts, and bot error alerts.
+
+* **Automated Server & Guild Reports**: Users will be able to customize and receive daily, weekly, and monthly reports about their servers and guilds.
+
+* **Commands**: We will be introducing a wide range of commands for more interaction with the servers, including:
+
+    * /ping <server_uuid>: Get the current ping of a server.
+    * /players <active | max> <server_uuid>: Get the current active or max player counts.
+    * /connect <server_uuid>: Receive a clickable Steam connect link for most servers.
+    * /status <server_uuid>: Get the current status of the server.
+    * /info <server_uuid>: Receive the server embed in an ephemeral message.
+    * /uptime <server_uuid>: Get the current uptime of the server.
+    * /health <server_uuid>: Receive a detailed health report of the server.
+    * /servers: Get a full list of all the servers in the current Discord guild with connection info, server UUID, game, map, active players, etc.
+
+We're excited about the future of ServerQuery Bot and are actively working on these enhancements. Stay tuned for updates and don't hesitate to suggest new features!
+
 ## Contributions
-[Contributions to this project are welcome!](https://github.com/ihasTaco/ServerQuery-Node/blob/main/CONTRIBUTING.md) If you have a feature you'd like to add, or if you've found a bug and know how to fix it, feel free to make a pull request.
+Contributions to this project are welcome! If you have a feature you'd like to add, or if you've found a bug and know how to fix it, feel free to make a pull request.
 
 ## License
 This project is licensed under the Mozilla Public License 2.0 (MPL-2.0). This means you can freely use, modify, distribute, and display the project, but you must disclose the source and any changes you've made if you distribute modified versions of this software. For more details, please see the [LICENSE]() file in this repository or read the [full text of the MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/).
