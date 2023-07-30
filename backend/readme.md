@@ -1,5 +1,14 @@
-# Backend
+# ServerQuery Backend
 This is the backend part of the Discord bot project, which is responsible for handling server-side logic and serving API endpoints. It uses Express.js for the server and Axios for making HTTP requests.
+
+## Table of Contents
+* [Installation](https://github.com/ihasTaco/ServerQuery-Node/tree/main/backend#installation)
+* [Configuration](https://github.com/ihasTaco/ServerQuery-Node/tree/main/backend#configuration)
+* [API Endpoints](https://github.com/ihasTaco/ServerQuery-Node/tree/main/backend#api-endpoints)
+* [Upcoming Features](https://github.com/ihasTaco/ServerQuery-Node/tree/main/backend#upcoming-features)
+* [Contributions](https://github.com/ihasTaco/ServerQuery-Node/tree/main/backend#contributions)
+* [License](https://github.com/ihasTaco/ServerQuery-Node/tree/main/backend#license)
+
 
 ## Installation
 To install the backend, navigate (cd) to the backend directory and run npm install. This will install all the necessary dependencies listed in the package.json file.
@@ -38,7 +47,12 @@ The backend server provides a number of API endpoints for interacting with the D
 * `/api/post/write-notification-settings/:guildID/:serverUUID`: Updates notification settings for a specified server.
 * `/api/post/write-server-info`: Takes in the guild_id, server_id, and the server_info and writes it to the server_info.json file.
 * `/api/post/delete-server`: Takes in the guild_id and the server_id, finds the specified server UUID in the server_info.json and servers.json files, and deletes it.
-## Future Features
-In future updates, a key-based authorization system will be implemented for all API endpoints. This means that a specific key will be required to run any of the API endpoints. This will enhance the security of the backend and ensure that only authorized requests are processed.
+## Upcoming Features
+
+* **Key-Based Authorization API Endpoint System**: A specific configurable key will be required to run any of the API endpoints. This will enhance the security of the backend and ensure that only authorized requests are processed.
+
 ## Contributions
 Contributions to this project are welcome! If you have a feature you'd like to add, or if you've found a bug and know how to fix it, feel free to make a pull request.
+
+## License
+This project is licensed under the Mozilla Public License 2.0 (MPL-2.0). This means you can freely use, modify, distribute, and display the project, but you must disclose the source and any changes you've made if you distribute modified versions of this software. For more details, please see the [LICENSE]() file in this repository or read the [full text of the MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/).
