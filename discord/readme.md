@@ -12,6 +12,14 @@ This folder contains all the bot's code, including the commands it supports (com
 
 For specific details on how to install, configure, and use this Discord bot, refer to the sections below.
 
+## Table of Contents
+* [Installation](https://github.com/ihasTaco/ServerQuery-Node/tree/main/discord#installation)
+* [Configuration](https://github.com/ihasTaco/ServerQuery-Node/tree/main/discord#configuration)
+* [Features](https://github.com/ihasTaco/ServerQuery-Node/tree/main/discord#features)
+* [Upcoming Features](https://github.com/ihasTaco/ServerQuery-Node/tree/main/discord#upcoming-features)
+* [Contributions](https://github.com/ihasTaco/ServerQuery-Node/tree/main/discord#contributions)
+* [License](https://github.com/ihasTaco/ServerQuery-Node/tree/main/discord#license)
+
 ## Installation
 To install the bot's dependencies, navigate to the 'discord' directory in your terminal and run npm install. This command will install all the necessary dependencies listed in the package.json file.
 
