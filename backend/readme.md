@@ -37,7 +37,7 @@ The backend server provides a number of API endpoints for interacting with the D
 * `/api/post/write-graph-settings/:guildID/:serverUUID`: Updates graph settings for a specified server.
 * `/api/post/write-notification-settings/:guildID/:serverUUID`: Updates notification settings for a specified server.
 * `/api/post/write-server-info`: Takes in the guild_id, server_id, and the server_info and writes it to the server_info.json file.
-* `/api/post/delete-server`: Takes in the guild_id and the server_id, finds the specified server UUID in the server_info.json and servers.js files, and deletes it.
+* `/api/post/delete-server`: Takes in the guild_id and the server_id, finds the specified server UUID in the server_info.json and servers.json files, and deletes it.
 ## Future Features
 In future updates, a key-based authorization system will be implemented for all API endpoints. This means that a specific key will be required to run any of the API endpoints. This will enhance the security of the backend and ensure that only authorized requests are processed.
 ## Contributions
