@@ -1,0 +1,829 @@
+{
+  "1071243907121295420": {
+    "433365aa-1202-455a-9cce-d9cc61921e1c": {
+      "bot_settings": {
+        "server_name": "Unturned | Buak | PvE",
+        "channel_id": "1080641502235066478",
+        "refresh_interval": "30"
+      },
+      "server_settings": {
+        "ip": "147.135.105.231",
+        "connection_port": "27036",
+        "query_port": "27036",
+        "game": "unturned",
+        "query_protocol": "unturned"
+      },
+      "embed_settings": {
+        "embed_color": "#f99345",
+        "embed_title": "{game} | {map} | PvE",
+        "embed_description": "Connect: steam://connect/{ip}:{connection_port}",
+        "disable_timestamp": false,
+        "disable_player_names": false,
+        "thumbnail_settings": {
+          "disable_thumbnail": false,
+          "thumbnail_url": "https://royalproductions.xyz/images/logo/RP_Logo_Outline.png"
+        },
+        "footer_settings": {
+          "disable_footer": false,
+          "footer_text": "ServerQuery by Royal Productions",
+          "footer_url": "https://images-ext-2.discordapp.net/external/TAMDK-zRCVaPLqqGxFWpXE_rcA4H100VGINWKrVs5aU/https/cdn.discordapp.com/icons/1049010929968357446/537ca892b5537302bcefa30fac5b3e15.webp"
+        }
+      },
+      "embed_field_settings": {
+        "embed_fields": {
+          "status": {
+            "disable": false,
+            "inline": true,
+            "index": 0,
+            "online_emoji": ":green_circle:",
+            "offline_emoji": ":red_circle:",
+            "online_text": "Online",
+            "offline_text": "Offline"
+          },
+          "connection": {
+            "disable": false,
+            "inline": true,
+            "index": 1,
+            "text": "{ip}:{connection_port}"
+          },
+          "location": {
+            "disable": false,
+            "inline": true,
+            "index": 2,
+            "emoji": ":flag_us:",
+            "text": "US"
+          },
+          "game": {
+            "disable": false,
+            "inline": true,
+            "index": 3,
+            "text": "{game}"
+          },
+          "map": {
+            "disable": false,
+            "inline": true,
+            "index": 4,
+            "text": "{map}"
+          },
+          "players": {
+            "disable": false,
+            "inline": true,
+            "index": 5,
+            "text": "{players_active}/{players_max}"
+          },
+          "password_protected": {
+            "disable": true,
+            "inline": true,
+            "index": 6,
+            "emoji": ":lock:"
+          },
+          "password": {
+            "disable": true,
+            "inline": true,
+            "index": 7,
+            "text": "Password123"
+          }
+        }
+      },
+      "graph_settings": {
+        "disable": false,
+        "title_settings": {
+          "text": "",
+          "color": ""
+        },
+        "x_label_settings": {
+          "text": "Players",
+          "color": "#b8b8b8"
+        },
+        "y_label_settings": {
+          "text": "Time (UTC)",
+          "color": "#b8b8b8"
+        },
+        "tick_settings": {
+          "x_color": "#b8b8b8",
+          "y_color": "#b8b8b8"
+        },
+        "graph_line_settings": {
+          "player_settings": {
+            "disable": false,
+            "line_color": "#e06610",
+            "fill_color": "#e06610",
+            "fill_opacity": 0.2
+          },
+          "trend_settings": {
+            "disable": false,
+            "color": "#ff0000"
+          },
+          "grid_settings": {
+            "disable": false,
+            "color": "#b8b8b8",
+            "opacity": 0.15
+          }
+        },
+        "legend_settings": {
+          "disable": false,
+          "background_color": "#ffffff",
+          "background_opacity": 0.25,
+          "border_color": "#ffffff",
+          "border_opacity": 0.25
+        }
+      },
+      "notification_settings": {
+        "disable": false,
+        "disable_timestamp": false,
+        "channel_id": "",
+        "embed_settings": {
+          "embed_title": "{server_name} is now {server_status}",
+          "embed_description": "",
+          "embed_color": {
+            "offline_color": "#d23232",
+            "online_color": "#28c332"
+          },
+          "thumbnail_settings": {
+            "disable": false,
+            "thumbnail_url": ""
+          },
+          "footer_settings": {
+            "disable": false,
+            "footer_text": "ServerQuery by Royal Productions",
+            "footer_url": "https://images-ext-2.discordapp.net/external/TAMDK-zRCVaPLqqGxFWpXE_rcA4H100VGINWKrVs5aU/https/cdn.discordapp.com/icons/1049010929968357446/537ca892b5537302bcefa30fac5b3e15.webp"
+          },
+          "ping_settings": {
+            "disable": true,
+            "ping": ""
+          }
+        },
+        "field_settings": {
+          "status": {
+            "disable": false,
+            "index": 0,
+            "offline_emoji": ":red_circle:",
+            "online_emoji": ":green_circle:",
+            "online_text": "Online",
+            "offline_text": "Offline"
+          }
+        }
+      }
+    },
+    "676c975b-9fe5-4efa-be64-01c8d7911dd2": {
+      "bot_settings": {
+        "server_name": "Unturned | The Calypso Island | PvE",
+        "channel_id": "1080641502235066478",
+        "refresh_interval": "60"
+      },
+      "server_settings": {
+        "ip": "147.135.105.231",
+        "connection_port": "27039",
+        "query_port": "27039",
+        "game": "unturned",
+        "query_protocol": "unturned"
+      },
+      "embed_settings": {
+        "embed_color": "#f99345",
+        "embed_title": "{game} | {map} | PvE",
+        "embed_description": "Connect: steam://connect/{ip}:{connection_port}",
+        "disable_timestamp": false,
+        "disable_player_names": false,
+        "thumbnail_settings": {
+          "disable_thumbnail": false,
+          "thumbnail_url": "https://royalproductions.xyz/images/logo/RP_Logo_Outline.png"
+        },
+        "footer_settings": {
+          "disable_footer": false,
+          "footer_text": "ServerQuery by Royal Productions",
+          "footer_url": "https://images-ext-2.discordapp.net/external/TAMDK-zRCVaPLqqGxFWpXE_rcA4H100VGINWKrVs5aU/https/cdn.discordapp.com/icons/1049010929968357446/537ca892b5537302bcefa30fac5b3e15.webp"
+        }
+      },
+      "embed_field_settings": {
+        "embed_fields": {
+          "status": {
+            "disable": false,
+            "inline": true,
+            "index": 0,
+            "online_emoji": ":green_circle:",
+            "offline_emoji": ":red_circle:",
+            "online_text": "Online",
+            "offline_text": "Offline"
+          },
+          "connection": {
+            "disable": false,
+            "inline": true,
+            "index": 1,
+            "text": "{ip}:{connection_port}"
+          },
+          "location": {
+            "disable": false,
+            "inline": true,
+            "index": 2,
+            "emoji": ":flag_us:",
+            "text": "US"
+          },
+          "game": {
+            "disable": false,
+            "inline": true,
+            "index": 3,
+            "text": "{game}"
+          },
+          "map": {
+            "disable": false,
+            "inline": true,
+            "index": 4,
+            "text": "{map}"
+          },
+          "players": {
+            "disable": false,
+            "inline": true,
+            "index": 5,
+            "text": "{players_active}/{players_max}"
+          },
+          "password_protected": {
+            "disable": true,
+            "inline": true,
+            "index": 6,
+            "emoji": ":lock:"
+          },
+          "password": {
+            "disable": true,
+            "inline": true,
+            "index": 7,
+            "text": "Password123"
+          }
+        }
+      },
+      "graph_settings": {
+        "disable": false,
+        "title_settings": {
+          "text": "",
+          "color": ""
+        },
+        "x_label_settings": {
+          "text": "Players",
+          "color": "#b8b8b8"
+        },
+        "y_label_settings": {
+          "text": "Time (UTC)",
+          "color": "#b8b8b8"
+        },
+        "tick_settings": {
+          "x_color": "#b8b8b8",
+          "y_color": "#b8b8b8"
+        },
+        "graph_line_settings": {
+          "player_settings": {
+            "disable": false,
+            "line_color": "#e06610",
+            "fill_color": "#e06610",
+            "fill_opacity": 0.2
+          },
+          "trend_settings": {
+            "disable": false,
+            "color": "#ff0000"
+          },
+          "grid_settings": {
+            "disable": false,
+            "color": "#b8b8b8",
+            "opacity": 0.15
+          }
+        },
+        "legend_settings": {
+          "disable": false,
+          "background_color": "#ffffff",
+          "background_opacity": 0.25,
+          "border_color": "#ffffff",
+          "border_opacity": 0.25
+        }
+      },
+      "notification_settings": {
+        "disable": true,
+        "disable_timestamp": false,
+        "channel_id": "",
+        "embed_settings": {
+          "embed_title": "{server_name} is now {server_status}",
+          "embed_description": "",
+          "embed_color": {
+            "offline_color": "#d23232",
+            "online_color": "#28c332"
+          },
+          "thumbnail_settings": {
+            "disable": false,
+            "thumbnail_url": ""
+          },
+          "footer_settings": {
+            "disable": false,
+            "footer_text": "ServerQuery by Royal Productions",
+            "footer_url": "https://images-ext-2.discordapp.net/external/TAMDK-zRCVaPLqqGxFWpXE_rcA4H100VGINWKrVs5aU/https/cdn.discordapp.com/icons/1049010929968357446/537ca892b5537302bcefa30fac5b3e15.webp"
+          },
+          "ping_settings": {
+            "disable": true,
+            "ping": ""
+          }
+        },
+        "field_settings": {
+          "status": {
+            "disable": false,
+            "index": 0,
+            "offline_emoji": ":red_circle:",
+            "online_emoji": ":green_circle:",
+            "online_text": "Online",
+            "offline_text": "Offline"
+          }
+        }
+      }
+    },
+    "bfd29474-e4b0-468d-b32d-7918fa47a58a": {
+      "bot_settings": {
+        "server_name": "Rust | PvP",
+        "channel_id": "1081332021336485959",
+        "refresh_interval": "30"
+      },
+      "server_settings": {
+        "ip": "45.35.167.73",
+        "connection_port": "28700",
+        "query_port": "28715",
+        "game": "Rust",
+        "query_protocol": "rust"
+      },
+      "embed_settings": {
+        "embed_color": "#f99345",
+        "embed_title": "{game} | {map} | PvP",
+        "embed_description": "Connect: steam://connect/{ip}:{connection_port}",
+        "disable_timestamp": false,
+        "disable_player_names": false,
+        "thumbnail_settings": {
+          "disable_thumbnail": false,
+          "thumbnail_url": "https://royalproductions.xyz/images/logo/RP_Logo_Outline.png"
+        },
+        "footer_settings": {
+          "disable_footer": false,
+          "footer_text": "ServerQuery by Royal Productions",
+          "footer_url": "https://images-ext-2.discordapp.net/external/TAMDK-zRCVaPLqqGxFWpXE_rcA4H100VGINWKrVs5aU/https/cdn.discordapp.com/icons/1049010929968357446/537ca892b5537302bcefa30fac5b3e15.webp"
+        }
+      },
+      "embed_field_settings": {
+        "embed_fields": {
+          "status": {
+            "disable": false,
+            "inline": true,
+            "index": 0,
+            "online_emoji": ":green_circle:",
+            "offline_emoji": ":red_circle:",
+            "online_text": "Online",
+            "offline_text": "Offline"
+          },
+          "connection": {
+            "disable": false,
+            "inline": true,
+            "index": 1,
+            "text": "{ip}:{connection_port}"
+          },
+          "location": {
+            "disable": false,
+            "inline": true,
+            "index": 2,
+            "emoji": ":flag_us:",
+            "text": "US"
+          },
+          "game": {
+            "disable": false,
+            "inline": true,
+            "index": 3,
+            "text": "{game}"
+          },
+          "map": {
+            "disable": false,
+            "inline": true,
+            "index": 4,
+            "text": "{map}"
+          },
+          "players": {
+            "disable": false,
+            "inline": true,
+            "index": 5,
+            "text": "{players_active}/{players_max}"
+          },
+          "password_protected": {
+            "disable": true,
+            "inline": true,
+            "index": 6,
+            "emoji": ":lock:"
+          },
+          "password": {
+            "disable": true,
+            "inline": true,
+            "index": 7,
+            "text": "Password123"
+          }
+        }
+      },
+      "graph_settings": {
+        "disable": false,
+        "title_settings": {
+          "text": "",
+          "color": ""
+        },
+        "x_label_settings": {
+          "text": "Players",
+          "color": "#b8b8b8"
+        },
+        "y_label_settings": {
+          "text": "Time (UTC)",
+          "color": "#b8b8b8"
+        },
+        "tick_settings": {
+          "x_color": "#b8b8b8",
+          "y_color": "#b8b8b8"
+        },
+        "graph_line_settings": {
+          "player_settings": {
+            "disable": false,
+            "line_color": "#e06610",
+            "fill_color": "#e06610",
+            "fill_opacity": 0.2
+          },
+          "trend_settings": {
+            "disable": false,
+            "color": "#ff0000"
+          },
+          "grid_settings": {
+            "disable": false,
+            "color": "#b8b8b8",
+            "opacity": 0.15
+          }
+        },
+        "legend_settings": {
+          "disable": false,
+          "background_color": "#ffffff",
+          "background_opacity": 0.25,
+          "border_color": "#ffffff",
+          "border_opacity": 0.25
+        }
+      },
+      "notification_settings": {
+        "disable": false,
+        "disable_timestamp": false,
+        "channel_id": "",
+        "embed_settings": {
+          "embed_title": "{server_name} is now {server_status}",
+          "embed_description": "",
+          "embed_color": {
+            "offline_color": "#d23232",
+            "online_color": "#28c332"
+          },
+          "thumbnail_settings": {
+            "disable": false,
+            "thumbnail_url": ""
+          },
+          "footer_settings": {
+            "disable": false,
+            "footer_text": "ServerQuery by Royal Productions",
+            "footer_url": "https://images-ext-2.discordapp.net/external/TAMDK-zRCVaPLqqGxFWpXE_rcA4H100VGINWKrVs5aU/https/cdn.discordapp.com/icons/1049010929968357446/537ca892b5537302bcefa30fac5b3e15.webp"
+          },
+          "ping_settings": {
+            "disable": true,
+            "ping": ""
+          }
+        },
+        "field_settings": {
+          "status": {
+            "disable": false,
+            "index": 0,
+            "offline_emoji": ":red_circle:",
+            "online_emoji": ":green_circle:",
+            "online_text": "Online",
+            "offline_text": "Offline"
+          }
+        }
+      }
+    },
+    "4e7801da-afce-48d1-9c10-a2764ffee596": {
+      "bot_settings": {
+        "server_name": "Minecraft | PvP",
+        "channel_id": "1081331990072147968",
+        "refresh_interval": "30"
+      },
+      "server_settings": {
+        "ip": "104.129.132.73",
+        "connection_port": "25575",
+        "query_port": "25575",
+        "game": "Minecraft",
+        "query_protocol": "minecraft"
+      },
+      "embed_settings": {
+        "embed_color": "#f99345",
+        "embed_title": "{game} | PvP",
+        "embed_description": "Connect: steam://connect/{ip}:{connection_port}",
+        "disable_timestamp": false,
+        "disable_player_names": false,
+        "thumbnail_settings": {
+          "disable_thumbnail": false,
+          "thumbnail_url": "https://royalproductions.xyz/images/logo/RP_Logo_Outline.png"
+        },
+        "footer_settings": {
+          "disable_footer": false,
+          "footer_text": "ServerQuery by Royal Productions",
+          "footer_url": "https://images-ext-2.discordapp.net/external/TAMDK-zRCVaPLqqGxFWpXE_rcA4H100VGINWKrVs5aU/https/cdn.discordapp.com/icons/1049010929968357446/537ca892b5537302bcefa30fac5b3e15.webp"
+        }
+      },
+      "embed_field_settings": {
+        "embed_fields": {
+          "status": {
+            "disable": false,
+            "inline": true,
+            "index": 0,
+            "online_emoji": ":green_circle:",
+            "offline_emoji": ":red_circle:",
+            "online_text": "Online",
+            "offline_text": "Offline"
+          },
+          "connection": {
+            "disable": false,
+            "inline": true,
+            "index": 1,
+            "text": "{ip}:{connection_port}"
+          },
+          "location": {
+            "disable": false,
+            "inline": true,
+            "index": 2,
+            "emoji": ":flag_us:",
+            "text": "US"
+          },
+          "game": {
+            "disable": false,
+            "inline": true,
+            "index": 3,
+            "text": "{game}"
+          },
+          "map": {
+            "disable": false,
+            "inline": true,
+            "index": 4,
+            "text": "world"
+          },
+          "players": {
+            "disable": false,
+            "inline": true,
+            "index": 5,
+            "text": "{players_active}/{players_max}"
+          },
+          "password_protected": {
+            "disable": true,
+            "inline": true,
+            "index": 6,
+            "emoji": ":lock:"
+          },
+          "password": {
+            "disable": true,
+            "inline": true,
+            "index": 7,
+            "text": "Password123"
+          }
+        }
+      },
+      "graph_settings": {
+        "disable": false,
+        "title_settings": {
+          "text": "",
+          "color": ""
+        },
+        "x_label_settings": {
+          "text": "Players",
+          "color": "#b8b8b8"
+        },
+        "y_label_settings": {
+          "text": "Time (UTC)",
+          "color": "#b8b8b8"
+        },
+        "tick_settings": {
+          "x_color": "#b8b8b8",
+          "y_color": "#b8b8b8"
+        },
+        "graph_line_settings": {
+          "player_settings": {
+            "disable": false,
+            "line_color": "#e06610",
+            "fill_color": "#e06610",
+            "fill_opacity": 0.2
+          },
+          "trend_settings": {
+            "disable": false,
+            "color": "#ff0000"
+          },
+          "grid_settings": {
+            "disable": false,
+            "color": "#b8b8b8",
+            "opacity": 0.15
+          }
+        },
+        "legend_settings": {
+          "disable": false,
+          "background_color": "#ffffff",
+          "background_opacity": 0.25,
+          "border_color": "#ffffff",
+          "border_opacity": 0.25
+        }
+      },
+      "notification_settings": {
+        "disable": false,
+        "disable_timestamp": false,
+        "channel_id": "",
+        "embed_settings": {
+          "embed_title": "{server_name} is now {server_status}",
+          "embed_description": "",
+          "embed_color": {
+            "offline_color": "#d23232",
+            "online_color": "#28c332"
+          },
+          "thumbnail_settings": {
+            "disable": false,
+            "thumbnail_url": ""
+          },
+          "footer_settings": {
+            "disable": false,
+            "footer_text": "ServerQuery by Royal Productions",
+            "footer_url": "https://images-ext-2.discordapp.net/external/TAMDK-zRCVaPLqqGxFWpXE_rcA4H100VGINWKrVs5aU/https/cdn.discordapp.com/icons/1049010929968357446/537ca892b5537302bcefa30fac5b3e15.webp"
+          },
+          "ping_settings": {
+            "disable": true,
+            "ping": ""
+          }
+        },
+        "field_settings": {
+          "status": {
+            "disable": false,
+            "index": 0,
+            "offline_emoji": ":red_circle:",
+            "online_emoji": ":green_circle:",
+            "online_text": "Online",
+            "offline_text": "Offline"
+          }
+        }
+      }
+    },
+    "301dfe3d-6f1e-4f39-b92a-1d681641fc2b": {
+      "bot_settings": {
+        "server_name": "7 Days to Die | PvE",
+        "channel_id": "1081331768667422791",
+        "refresh_interval": "30"
+      },
+      "server_settings": {
+        "ip": "45.35.167.70",
+        "connection_port": "27040",
+        "query_port": "27040",
+        "game": "7 Days to Die",
+        "query_protocol": "7d2d"
+      },
+      "embed_settings": {
+        "embed_color": "#f99345",
+        "embed_title": "{game} | {map} | PvE",
+        "embed_description": "Connect: steam://connect/{ip}:{connection_port}",
+        "disable_timestamp": false,
+        "disable_player_names": false,
+        "thumbnail_settings": {
+          "disable_thumbnail": false,
+          "thumbnail_url": "https://royalproductions.xyz/images/logo/RP_Logo_Outline.png"
+        },
+        "footer_settings": {
+          "disable_footer": false,
+          "footer_text": "ServerQuery by Royal Productions",
+          "footer_url": "https://images-ext-2.discordapp.net/external/TAMDK-zRCVaPLqqGxFWpXE_rcA4H100VGINWKrVs5aU/https/cdn.discordapp.com/icons/1049010929968357446/537ca892b5537302bcefa30fac5b3e15.webp"
+        }
+      },
+      "embed_field_settings": {
+        "embed_fields": {
+          "status": {
+            "disable": false,
+            "inline": true,
+            "index": 0,
+            "online_emoji": ":green_circle:",
+            "offline_emoji": ":red_circle:",
+            "online_text": "Online",
+            "offline_text": "Offline"
+          },
+          "connection": {
+            "disable": false,
+            "inline": true,
+            "index": 1,
+            "text": "{ip}:{connection_port}"
+          },
+          "location": {
+            "disable": false,
+            "inline": true,
+            "index": 2,
+            "emoji": ":flag_us:",
+            "text": "US"
+          },
+          "game": {
+            "disable": false,
+            "inline": true,
+            "index": 3,
+            "text": "{game}"
+          },
+          "map": {
+            "disable": false,
+            "inline": true,
+            "index": 4,
+            "text": "{map}"
+          },
+          "players": {
+            "disable": false,
+            "inline": true,
+            "index": 5,
+            "text": "{players_active}/{players_max}"
+          },
+          "password_protected": {
+            "disable": true,
+            "inline": true,
+            "index": 6,
+            "emoji": ":lock:"
+          },
+          "password": {
+            "disable": true,
+            "inline": true,
+            "index": 7,
+            "text": "Password123"
+          }
+        }
+      },
+      "graph_settings": {
+        "disable": false,
+        "title_settings": {
+          "text": "",
+          "color": ""
+        },
+        "x_label_settings": {
+          "text": "Players",
+          "color": "#b8b8b8"
+        },
+        "y_label_settings": {
+          "text": "Time (UTC)",
+          "color": "#b8b8b8"
+        },
+        "tick_settings": {
+          "x_color": "#b8b8b8",
+          "y_color": "#b8b8b8"
+        },
+        "graph_line_settings": {
+          "player_settings": {
+            "disable": false,
+            "line_color": "#e06610",
+            "fill_color": "#e06610",
+            "fill_opacity": 0.2
+          },
+          "trend_settings": {
+            "disable": false,
+            "color": "#ff0000"
+          },
+          "grid_settings": {
+            "disable": false,
+            "color": "#b8b8b8",
+            "opacity": 0.15
+          }
+        },
+        "legend_settings": {
+          "disable": false,
+          "background_color": "#ffffff",
+          "background_opacity": 0.25,
+          "border_color": "#ffffff",
+          "border_opacity": 0.25
+        }
+      },
+      "notification_settings": {
+        "disable": false,
+        "disable_timestamp": false,
+        "channel_id": "",
+        "embed_settings": {
+          "embed_title": "{server_name} is now {server_status}",
+          "embed_description": "",
+          "embed_color": {
+            "offline_color": "#d23232",
+            "online_color": "#28c332"
+          },
+          "thumbnail_settings": {
+            "disable": false,
+            "thumbnail_url": ""
+          },
+          "footer_settings": {
+            "disable": false,
+            "footer_text": "ServerQuery by Royal Productions",
+            "footer_url": "https://images-ext-2.discordapp.net/external/TAMDK-zRCVaPLqqGxFWpXE_rcA4H100VGINWKrVs5aU/https/cdn.discordapp.com/icons/1049010929968357446/537ca892b5537302bcefa30fac5b3e15.webp"
+          },
+          "ping_settings": {
+            "disable": true,
+            "ping": ""
+          }
+        },
+        "field_settings": {
+          "status": {
+            "disable": false,
+            "index": 0,
+            "offline_emoji": ":red_circle:",
+            "online_emoji": ":green_circle:",
+            "online_text": "Online",
+            "offline_text": "Offline"
+          }
+        }
+      }
+    }
+  }
+}
