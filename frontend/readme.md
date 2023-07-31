@@ -36,10 +36,21 @@ Timestamp Management: Users can enable/disable the timestamp in the embed.
 These are just a few of the many features of the frontend dashboard, which offers a myriad of customization options.
 
 ## Upcoming Features
+* **Additional Graph Types**: We plan to add more graph types to better cater to data visualization needs. This will include stacked area graphs, line graphs, bar graphs, scatter plots, bubble charts, density plots, and candlestick charts.
+* **Server Timezone Configuration**: We aim to allow users to set the server's timezone. The current default is UTC.
+* **Custom Fields**: We plan to provide the functionality for users to set up custom fields.
+* **Role-Based Access Control**: Guild owners will be able to control who has access to a server, enhancing security and control over server management.
+* **Statistics**: The dashboard will show stats like the number of guilds the bot is in, the number of bot instances in a certain guild, the total number of users playing on servers hosted by a guild, the number of players on a specific server, and more.
+* **(Potential) Server Console**: We're considering adding a server console that can be viewed in the server dashboard, allowing users to see what actions the bot is taking on the game server.
+* **Discord Embed Simulator**: This feature will allow users to preview what the embed will look like before making any updates, ensuring they can get it just right before committing changes.
+* **Support for More Games**: Our ongoing work aims to extend the bot's compatibility with a broader range of games. We utilize [GameDig](https://github.com/gamedig/node-gamedig) as our primary game server query library. If you possess coding skills and would like to contribute to the ServerQuery community and the wider game server query ecosystem, we encourage you to submit any [custom query protocols](https://github.com/gamedig/node-gamedig#not-supported-yet) directly to GameDig. Your contributions will help enrich our project and the broader gaming community.
 
-* 
+We're excited about these upcoming enhancements and are actively working on their development. We appreciate your patience as we strive to make our bot even better!
+
+Remember to keep an eye on this section for updates on new features and improvements. And as always, if you have an idea for a feature you'd like to see, don't hesitate to suggest it!
 
 ## Contributions
 Contributions to this project are welcome! If you have a feature you'd like to add, or if you've found a bug and know how to fix it, feel free to make a pull request.
 
 ## License
+This project is licensed under the Mozilla Public License 2.0 (MPL-2.0). This means you can freely use, modify, distribute, and display the project, but you must disclose the source and any changes you've made if you distribute modified versions of this software. For more details, please see the [LICENSE](https://github.com/ihasTaco/ServerQuery-Node/blob/main/LICENSE) file in this repository or read the [full text of the MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/).
