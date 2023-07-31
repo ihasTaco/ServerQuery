@@ -52,5 +52,7 @@ Remember to keep an eye on this section for updates on new features and improvem
 ## Contributions
 Contributions to this project are welcome! If you have a feature you'd like to add, or if you've found a bug and know how to fix it, feel free to make a pull request.
 
+We use [GameDig](https://github.com/gamedig/node-gamedig) to query all game servers, so a big thanks to them. If you want to contribute custom query libraries to help ServerQuery, we highly recommend submitting it directly to GameDig! Not only will it help us out, but it will also benefit the greater game server query community!
+
 ## License
-This project is licensed under the Mozilla Public License 2.0 (MPL-2.0). This means you can freely use, modify, distribute, and display the project, but you must disclose the source and any changes you've made if you distribute modified versions of this software. For more details, please see the [LICENSE](https://github.com/ihasTaco/ServerQuery-Node/blob/main/LICENSE) file in this repository or read the [full text of the MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/).
+ServerQuery is licensed under the Mozilla Public License 2.0 (MPL-2.0). This means you can freely use, modify, distribute, and display the project. However, if you distribute modified versions of this software, you must disclose the source and any changes you've made. For more details, please see the [LICENSE](https://github.com/ihasTaco/ServerQuery-Node/blob/main/LICENSE) file in this repository or read the [full text of the MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/).
