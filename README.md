@@ -1,8 +1,8 @@
 # ServerQuery
-![GitHub all releases](https://img.shields.io/github/downloads/ihasTaco/ServerQuery-Node/total)
-![GitHub contributors](https://img.shields.io/github/contributors/ihasTaco/ServerQuery-Node)
-![GitHub forks](https://img.shields.io/github/forks/ihasTaco/ServerQuery-Node)
-![GitHub stars](https://img.shields.io/github/stars/ihasTaco/ServerQuery-Node)
+![GitHub all releases](https://img.shields.io/github/downloads/ihasTaco/ServerQuery/total)
+![GitHub contributors](https://img.shields.io/github/contributors/ihasTaco/ServerQuery)
+![GitHub forks](https://img.shields.io/github/forks/ihasTaco/ServerQuery)
+![GitHub stars](https://img.shields.io/github/stars/ihasTaco/ServerQuery)
 
 ServerQuery stands as the most advanced and customizable Discord game server query bot currently available. With the ability to fine-tune virtually every aspect of the embed - from color, title, and description, to field positions, graph colors, and more - ServerQuery empowers you to create a bot experience that truly resonates with your community.
 
