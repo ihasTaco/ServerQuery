@@ -11,7 +11,7 @@ This is the backend part of the Discord bot project, which is responsible for ha
 
 
 ## Installation
-To install the backend, navigate (cd) to the backend directory and run npm install. This will install all the necessary dependencies listed in the package.json file.
+To install the backend server's dependencies, navigate to the 'backend' directory in your terminal and run `npm install`. This command will install all the necessary dependencies listed in the package.json file.
 
 ## Configuration
 Configuration settings for the backend are stored in a .env file. For guidance on how to fill in this file, refer to the _example.env file included in this directory.
