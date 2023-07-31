@@ -1,5 +1,5 @@
 # ServerQuery
-[![Github All Releases](https://img.shields.io/github/downloads/ihasTaco/ServerQuery-Node/total.svg)]()
+![GitHub all releases](https://img.shields.io/github/downloads/ihasTaco/ServerQuery-Node/total)
 ![GitHub contributors](https://img.shields.io/github/contributors/ihasTaco/ServerQuery-Node)
 ![GitHub forks](https://img.shields.io/github/forks/ihasTaco/ServerQuery-Node)
 ![GitHub stars](https://img.shields.io/github/stars/ihasTaco/ServerQuery-Node)
