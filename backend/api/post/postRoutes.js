@@ -226,22 +226,22 @@ router.delete('/delete-server', async (req, res) => {
 
     try {
         // Read and parse server_info.json
-        let serverInfoData = JSON.parse(await fs.readFile('./public/server_info.json', 'utf8'));
+        let serverInfoData = JSON.parse(await fs.promises.readFile('./public/server_info.json', 'utf8'));
         // Delete server_uuid
         if (serverInfoData[guild_id]) {
             delete serverInfoData[guild_id][server_uuid];
         }
         // Write the modified data back to server_info.json
-        await fs.writeFile('./public/server_info.json', JSON.stringify(serverInfoData, null, 2));
+        await fs.promises.writeFile('./public/server_info.json', JSON.stringify(serverInfoData, null, 2));
 
         // Read and parse servers.json
-        let serversData = JSON.parse(await fs.readFile('./public/servers.json', 'utf8'));
+        let serversData = JSON.parse(await fs.promises.readFile('./public/servers.json', 'utf8'));
         // Delete server_uuid
         if (serversData[guild_id]) {
             delete serversData[guild_id][server_uuid];
         }
         // Write the modified data back to servers.json
-        await fs.writeFile('./public/servers.json', JSON.stringify(serversData, null, 2));
+        await fs.promises.writeFile('./public/servers.json', JSON.stringify(serversData, null, 2));
 
         res.json({ message: 'Server UUID deleted successfully.' });
     } catch (err) {

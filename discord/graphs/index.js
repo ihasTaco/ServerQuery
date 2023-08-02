@@ -2,6 +2,7 @@ const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 const { sma } = require('moving-averages');
 const path = require('path');
 const fs = require('fs');
+const logger = require('../utils/logger');
 
 const { getServerDetails, getServerInfo } = require('../api');
 
@@ -9,25 +10,31 @@ const { getServerDetails, getServerInfo } = require('../api');
 const graph_area = require('./graph_area');
 
 async function getServerPlayers(guild_id, server_uuid) {
+    logger.debug(`Getting server players for guild: ${guild_id}, server: ${server_uuid}`);
     return getServerInfo(guild_id, server_uuid)
         .then(response => {
+            logger.debug(`Server players retrieved`);
             return response.data.players;
         })
-        .catch(console.error);
+        .catch(error => {
+            logger.error(`Error getting server players: ${error}`);
+        });
 }
+
 async function getServerData(guild_id, server_uuid) {
+    logger.debug(`Getting server data for guild: ${guild_id}, server: ${server_uuid}`);
     return getServerDetails(guild_id, server_uuid)
         .then(response => {
+            logger.debug(`Server data retrieved`);
             return response.data;
         })
-        .catch(console.error);
+        .catch(error => {
+            logger.error(`Error getting server data: ${error}`);
+        });
 }
 
 async function createGraph(guild_id, server_uuid) {
-    //console.log(`\n-- Create Graph --`)
-    //console.log(`Guild ID: ${guild_id}`)
-    //console.log(`Server UUID: ${server_uuid}`)
-
+    logger.debug(`Creating graph for guild: ${guild_id}, server: ${server_uuid}`);
     Array.prototype.sma = require('moving-averages').sma;
     const width = 700;
     const height = 500;
@@ -35,35 +42,35 @@ async function createGraph(guild_id, server_uuid) {
 
     // Set up Player Data, Server Data, and Player Trends Data
     let player_data = await getServerPlayers(guild_id, server_uuid);
-    //console.log(`Player Data: `, player_data)
-
     const server_data = await getServerData(guild_id, server_uuid);
-    //console.log(`Server Data: `, server_data)
     
-    // Gets the entries per week based on the refresh_interval
-    // with a refresh_interval of 15sec that would be about 40320 points of data
     const secondsInDay = 24 * 60 * 60;
     let entriesPerDay = Math.round(secondsInDay / server_data.bot_settings.refresh_interval);
+
     let players;
     let trend_data;
     if (Array.isArray(player_data)) {
         players = player_data.slice(-entriesPerDay);
         trend_data = player_data.slice(0, -entriesPerDay);
-        // rest of your code
     } else {
-        console.log('player_data is not an array');
+        logger.warn('player_data is not an array');
     }
 
     let players_trend = sma(trend_data, 60 / server_data.bot_settings.refresh_interval);
     
     if (players != entriesPerDay) {
+        logger.debug(`entriesPerDay: ${entriesPerDay}, players.length: ${players.length}`);
         players = Array(entriesPerDay - players.length).fill(0).concat(players);
     }
-
+    if (trend_data != entriesPerDay) {
+        logger.debug(`entriesPerDay: ${entriesPerDay}, trend_data.length: ${trend_data.length}`);
+        trend_data = Array(entriesPerDay - trend_data.length).fill(0).concat(trend_data);
+    }
+    
     // LABELS //
     // This makes labels for every hour of the day the latest (right) value being the current time
     // Will add a customization in the dashboard so the user can select their timezone, for now though, we will use UTC
-    let userTimezone = "America/Denver"; // Default Option: UTC
+    let userTimezone = "UTC"; // Default Option: UTC
     let use12Format = true;
 
     // Get the current time in the user's timezone
@@ -72,7 +79,7 @@ async function createGraph(guild_id, server_uuid) {
         hour: '2-digit', 
         minute: '2-digit', 
         second: '2-digit', 
-        hour12: false, // Keep this false, as if set to true 12 hour format wont work...
+        hour12: false, // Keep this false, if set to true 12 hour format wont work...
         timeZone: userTimezone 
     });
     let timeParts = formatter.format(date).split(':');
@@ -118,12 +125,24 @@ async function createGraph(guild_id, server_uuid) {
             let outputPath = path.join(process.cwd(), `./images/${guild_id}.${server_uuid}.png`);
             return new Promise((resolve, reject) => {
                 fs.writeFile(outputPath, buffer, (err) => {
-                    if (err) reject(err);
-                    else resolve(outputPath);
+                    if (err) {
+                        logger.error(`Error writing graph to file: ${err}`);
+                        reject(err);
+                    } else {
+                        logger.debug(`Graph written to file`);
+                        resolve(outputPath);
+                    }
                 });
             });
         })
-        .catch(console.error);
+        .catch(error => {
+            logger.error(`Error creating graph: ${error}`);
+        });
 }
 
 module.exports = createGraph;
+
+
+
+
+

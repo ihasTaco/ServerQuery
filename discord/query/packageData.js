@@ -1,27 +1,23 @@
 const { writeServerInfo, getServerInfo } = require('../api/index');
+const logger = require('../utils/logger');
 
 async function packageData(state, guild_id, server_uuid) {
-    //console.log(`\n-- Packaging Data --`)
-    //console.log(`Guild ID: ${guild_id}`)
-    //console.log(`Server UUID: ${server_uuid}`)
-    //console.log(`State: `, state)
-
-    console.log('packageData')
+    logger.debug('Packaging data...');
 
     let server_info = {};
     let info = {};
     let did_restart = '';
     let map = '';
 
-    console.log('Getting server info')
+    logger.debug('Getting server info...');
     await getServerInfo(guild_id, server_uuid)
         .then(response => {
             info = response.data;
-            console.log('Got server info')
+            logger.debug('Got server info.');
         })
         .catch(error => {
             if (error.response && error.response.status === 404) {
-                console.log('Server info not found, initializing new server info');
+                logger.warn('Server info not found, initializing new server info.');
                 info = {
                     map: null,
                     players: [],
@@ -31,26 +27,24 @@ async function packageData(state, guild_id, server_uuid) {
                     message_id: null,
                 };
             } else {
-                console.error('Error getting server info:', error);
+                logger.error(`Error getting server info: ${error}`);
                 throw error;
             }
         });
 
-    //console.log(`API Server Info: `, info)
-    console.log('Setting Server Info details')
-
+    logger.debug('Setting server info details...');
     if (!info.status && state) {
         did_restart = new Date().toISOString();
     } else {
         did_restart = info.last_restart;
     }
-    if (!state) {  // server is offline
+    if (!state) {
         if (info.map) {
             map = info.map;
         } else {
             map = 'Unavailable';
         }
-    } else {  // server is online
+    } else {
         map = state.map;
     }
 
@@ -80,12 +74,10 @@ async function packageData(state, guild_id, server_uuid) {
         };
     }
 
-    //console.log(`Generated Server Info: `, server_info)
-    console.log('Writing Server Info to Server Info JSON...')
+    logger.debug('Writing server info to server info JSON...');
     await writeServerInfo(guild_id, server_uuid, server_info);
-    console.log('Finished writing Server Info to Server Info JSON!')
-    
-    console.log('Sending back server_info to queryServer')
+    logger.debug('Finished writing server info to server info JSON.');
+    logger.debug('Packaged data successfully. Sending data back to queryServer.');
     return { server_info };
 }
 

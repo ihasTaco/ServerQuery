@@ -1,3 +1,5 @@
+const logger = require('../utils/logger');
+
 function hexToRgba(hex, opacity) {
     let r = parseInt(hex.slice(1, 3), 16),
         g = parseInt(hex.slice(3, 5), 16),
@@ -7,14 +9,9 @@ function hexToRgba(hex, opacity) {
 }
 
 function graph_area(graphSettings, players, trend_line, labels) {
-    //console.log(`\n-- Configuring Area Graph --`)
-    //console.log(`Graph Settings: `, graphSettings)
-    //console.log(`Players: `, players)
-    //console.log(`Trend Line: `, trend_line)
-    //console.log(`Labels: `, labels)
-
-    let playersDataForBar = [];
+    logger.debug('Configuring graph area');
     
+    let playersDataForBar = [];
     let maxPlayerValue;
 
     if (Math.max(...players) == 0) {
@@ -133,6 +130,7 @@ function graph_area(graphSettings, players, trend_line, labels) {
             }
         }
     };
+    logger.debug('Graph area configured');
     return configuration;
 }
 

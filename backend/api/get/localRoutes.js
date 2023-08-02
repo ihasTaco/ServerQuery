@@ -7,7 +7,7 @@ require('dotenv').config({ path: './.env' });
 
 const router = express.Router();
 
-const defaultSettings = require('./public/default_server.json');
+const defaultSettings = require('../../public/default_server.json');
 
 router.get('/authenticatedToken', async (req, res) => {
     const jwtToken = req.cookies.Authenticated;

@@ -2,6 +2,7 @@ require('dotenv').config();
 const axios = require('axios');
 const { EmbedBuilder } = require('discord.js');
 const { AttachmentBuilder } = require('discord.js');
+const logger = require('../utils/logger');
 
 function replaceVariables(str, server_settings, server_query) {
     if (str) {
@@ -26,6 +27,7 @@ function replaceVariables(str, server_settings, server_query) {
 }
 
 async function createEmbed(server_settings, graph_url, server_query) {
+    logger.debug('Creating embed...');
     let embed = new EmbedBuilder()
       .setTitle(replaceVariables(server_settings.embed_settings.embed_title, server_settings, server_query))
       .setDescription(replaceVariables(server_settings.embed_settings.embed_description, server_settings, server_query))
@@ -80,10 +82,11 @@ async function createEmbed(server_settings, graph_url, server_query) {
         }
     }
 
-    // Image
+    logger.debug('Adding image to embed...');
     const attachment = new AttachmentBuilder(graph_url, { name: 'chart.png' });
     embed.setImage('attachment://chart.png');
 
+    logger.debug('Embed created.');
     return [embed, attachment];
 }
 
