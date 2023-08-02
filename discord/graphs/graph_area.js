@@ -12,17 +12,31 @@ function graph_area(graphSettings, players, trend_line, labels) {
     logger.debug('Configuring graph area');
     
     let playersDataForBar = [];
-    let maxPlayerValue;
 
-    if (Math.max(...players) == 0) {
+    // Calculate max value for players and trend_line
+    let maxPlayerValue = Math.max(...players);
+    let maxTrendValue = Math.max(...trend_line);
+
+    // If maxPlayerValue is zero, set it to 2
+    if (maxPlayerValue === 0) {
         maxPlayerValue = 2;
     } else {
-        maxPlayerValue = 2 * Math.max(...players);
+        maxPlayerValue = maxPlayerValue * 2;
     }
+
+    // If maxTrendValue is zero, set it to 2
+    if (maxTrendValue === 0) {
+        maxTrendValue = 2;
+    } else {
+        maxTrendValue = maxTrendValue * 2;
+    }
+
+    // Choose the maximum value between maxPlayerValue and maxTrendValue
+    let graphHeight = Math.max(maxPlayerValue, maxTrendValue);
 
     for (let i = 0; i < players.length; i++) {
         if (players[i] === -1) {
-            playersDataForBar[i] = maxPlayerValue;
+            playersDataForBar[i] = graphHeight;
             players[i] = 0;
         } else {
             playersDataForBar[i] = null;
@@ -113,7 +127,7 @@ function graph_area(graphSettings, players, trend_line, labels) {
                 },
                 y: {
                     min: 0,
-                    max: maxPlayerValue,
+                    max: graphHeight,
                     display: true,
                     title: {
                         display: true,

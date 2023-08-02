@@ -50,22 +50,24 @@ async function createGraph(guild_id, server_uuid) {
     let players;
     let trend_data;
     if (Array.isArray(player_data)) {
+        trend_data = player_data;
         players = player_data.slice(-entriesPerDay);
-        trend_data = player_data.slice(0, -entriesPerDay);
     } else {
         logger.warn('player_data is not an array');
     }
-
-    let players_trend = sma(trend_data, 60 / server_data.bot_settings.refresh_interval);
     
-    if (players != entriesPerDay) {
+    if (players.length != entriesPerDay) {
         logger.debug(`entriesPerDay: ${entriesPerDay}, players.length: ${players.length}`);
         players = Array(entriesPerDay - players.length).fill(0).concat(players);
+        logger.debug(`players.length after padding: ${players.length}`);
     }
-    if (trend_data != entriesPerDay) {
+    if (trend_data.length != entriesPerDay) {
         logger.debug(`entriesPerDay: ${entriesPerDay}, trend_data.length: ${trend_data.length}`);
         trend_data = Array(entriesPerDay - trend_data.length).fill(0).concat(trend_data);
+        logger.debug(`trend_data.length after padding: ${trend_data.length}`);
     }
+
+    let players_trend = sma(trend_data, 60 / server_data.bot_settings.refresh_interval);
     
     // LABELS //
     // This makes labels for every hour of the day the latest (right) value being the current time
@@ -141,8 +143,3 @@ async function createGraph(guild_id, server_uuid) {
 }
 
 module.exports = createGraph;
-
-
-
-
-
