@@ -1,192 +1,306 @@
-require('dotenv').config({ path: '../.env' });
-const { Client, GatewayIntentBits, DiscordAPIError, RateLimitError, HTTPError } = require('discord.js');
-const { getGuilds, getServerUUIDsForGuild, getServerDetails, writeServerInfo, getServerInfo } = require('./api');
-const queryServer = require('./query');
+require('dotenv').config({path: './.env'});
+const {Client, GatewayIntentBits} = require('discord.js');
+const {getGuilds, getServerUUIDsForGuild, getServerSettings, writeMessageID, getServerInfo} = require('./api');
+const serverQuery = require('./query');
 const createGraph = require('./graphs');
-const { createEmbed } = require('./embeds');
-const async = require('async');
+const createEmbed = require('./embeds');
+const logger = require('./utils/logger');
 
-const client = new Client({ intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds] });
+const client = new Client({intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds]});
 
-const serverQueue = async.queue((task, callback) => {
-    handleServer(task.guild_id, task.server, task.server_settings).then(callback);
-}, 1);  // '1' is the number of simultaneous tasks allowed.
+// This keeps track of all the servers intializations, and only allows servers to be initialized once
+const initializedServers = new Set();
+/**
+ * Retrieves the guild object from the Discord API using a specified guild ID.
+ * If the guild is not found, a warning is logged, and the function returns null.
+ *
+ * @async
+ * @param {string} guildID - The ID of the guild to retrieve.
+ * @return {Object | null} - The object if found, or null if the guild with the given ID does not exist.
+ */
+async function getGuild(guildID) {
+  logger.debug(`Checking guild ${guildID}`);
+  const guild = client.guilds.cache.get(guildID);
+  if (!guild) {
+    logger.warn(`Guild with ID ${guildID} not found`);
+
+    return null;
+  }
+  logger.debug(`Finished checking guild ${guildID}`);
+
+  return guild;
+}
+
+/**
+ * Retrieves a specific channel from a given guild using the channel ID found in the server settings.
+ * The function logs the process of checking the channel and returns the channel object if found.
+ * If the channel is not found within the guild, a warning is logged, and the function returns null.
+ *
+ * @param {Object} guild - The guild object where the channel is expected to be found.
+ * @param {String} guildID - The ID of the guild associated with the channel.
+ * @param {Object} serverCustomizationSettings - The server settings containing the channel ID for retrieval.
+ * @return {Object | null} - The channel object if found, or null if the channel with the given ID does not exist in the guild.
+ */
+async function getChannel(guild, guildID, serverCustomizationSettings) {
+  logger.debug(`Checking channel ${serverCustomizationSettings.bot_settings.channel_id} in guild ${guildID}`);
+  const channel = await guild.channels.cache.get(serverCustomizationSettings.bot_settings.channel_id);
+  if (!channel) {
+    logger.warn(`Channel with ID ${serverCustomizationSettings.bot_settings.channel_id} not found in guild ${guildID}`);
+
+    return null;
+  }
+  logger.debug(`Finished checking guild ${guildID}`);
+
+  return channel;
+}
+
+/**
+ * Retrieves a specific message from a given channel using the message ID found in the server state.
+ * The function logs the process of checking the channel and returns the message object if found.
+ * If the message is not found within the channel, an error is logged, and the function returns null.
+ *
+ * @param {Object} channel - The channel object where the message is expected to be found.
+ * @param {String} guildID - The ID of the guild associated with the channel.
+ * @param {Object} serverCustomizationSettings - The server customization settings containing the channel ID for verification.
+ * @param {Object} serverInfo - The current state of the server, including the message ID to be fetched.
+ * @return {Object | null} - The message object if found, or null if the message with the given ID does not exist in the channel.
+ */
+async function getMessage(channel, guildID, serverCustomizationSettings, serverInfo) {
+  logger.debug(`Checking channel ${serverCustomizationSettings.bot_settings.channel_id} in guild ${guildID}`);
+  const message = await channel.messages.fetch(serverInfo.data.message_id);
+  if (!message) {
+    logger.error(`Message with ID ${queryState.message_id} not found in channel ${channel.id} in guild ${guildID}`);
+
+    return null;
+  }
+  logger.debug(`Finished getting message: ${message.id}`);
+
+  return message;
+}
+
+/**
+ * Queries a specific game server using the provided customization settings, guild ID, and server UUID.
+ * The server's IP, query port, and query protocol are extracted from the customization settings and used
+ * to perform the query. The result of the query is an object containing the current state of the server.
+ * If an error occurs during the query process, it is logged, and the function may return undefined.
+ *
+ * @param {String} guildID - The ID of the guild associated with the server being queried.
+ * @param {String} serverUUID - The unique identifier for the server being queried.
+ * @param {Object} serverCustomizationSettings - The server customization settings containing the IP, query port, and query protocol.
+ * @return {Object} - An object representing the current state of the queried server, or undefined if an error occurred.
+ */
+async function queryServer(guildID, serverUUID, serverCustomizationSettings ) {
+  logger.debug(`Querying server for guild ${guildID} and server ${serverUUID}`);
+  let queryState;
+  try {
+    queryState = await serverQuery(
+        serverCustomizationSettings.server_settings.ip,
+        serverCustomizationSettings.server_settings.query_port,
+        serverCustomizationSettings.server_settings.query_protocol,
+        guildID,
+        serverUUID,
+    );
+  } catch (err) {
+    logger.error(`There was an error while querying server for guild ${guildID} and server ${serverUUID}`);
+    logger.error(`Error: ${err}`);
+  }
+  logger.debug(`Finished querying server for guild ${guildID} and server ${serverUUID}`);
+  return queryState;
+}
+
+/**
+ * Generates a graph for a specific server within a guild based on the server customization settings.
+ * The graph is created by calling an external function `createGraph`, and the URL of the generated graph is returned.
+ * Any errors encountered during the graph generation process are logged.
+ *
+ * @param {String} guildID - The ID of the guild for which the graph is being generated.
+ * @param {String} serverUUID - The unique identifier for the server associated with the graph.
+ * @param {Object} serverCustomizationSettings - Customization settings for the graph, such as title, labels, colors, etc.
+ * @return {string} - The URL of the generated graph, or undefined if an error occurred.
+ */
+async function generateGraph(guildID, serverUUID, serverCustomizationSettings) {
+  logger.debug(`Generating graph for guild ${guildID} and server ${serverUUID}`);
+  let graphURL;
+  try {
+    graphURL = createGraph(guildID, serverUUID, serverCustomizationSettings);
+  } catch (err) {
+    logger.error(`There was an error while generating graph for guild ${guildID} and server ${serverUUID}`);
+    logger.error(`Error: ${err}`);
+  }
+  logger.debug(`Finished generating graph for guild ${guildID} and server ${serverUUID}`);
+
+  return graphURL;
+}
+
+/**
+ * Creates a new message in a specified channel within a guild. The message includes an embed
+ * and an attachment, generated based on the server customization settings, server profile, and graph URL.
+ * The newly created message's ID is then updated in the server state and written to the server info.
+ *
+ * @param {String} guildID - The ID of the guild where the message will be posted.
+ * @param {String} serverUUID - The unique identifier for the server associated with the message.
+ * @param {Object} channel - The channel object where the message will be posted.
+ * @param {Object} serverCustomizationSettings - Customization settings for the bot's behavior and appearance.
+ * @param {String} graphURL - The URL of the graph to be embedded in the message.
+ * @param {Object} queryState - The state of the server, which will be updated with the new message's ID.
+ * @return {Object | null} - The created message object if successful, or null if an error occurred (e.g., missing permissions, rate-limited).
+ */
+async function createMessage(guildID, serverUUID, channel, serverCustomizationSettings, graphURL, queryState) {
+  console.log(channel);
+  logger.debug(`Creating a new message for guild ${guildID} and server ${serverUUID} in channel: ${channel.id}`);
+  let message;
+  try {
+    const [embed, attachment] = await createEmbed(serverCustomizationSettings, graphURL, queryState);
+
+    message = await channel.send({embeds: [embed], files: [attachment]});
+    await writeMessageID(guildID, serverUUID, message.id);
+    logger.debug(`Finished creating a new message for guild ${guildID} and server ${serverUUID} in channel: ${channel.id}`);
+
+    return message;
+  } catch (err) {
+    if (err.message.includes('Missing Permissions')) {
+      logger.error(`Missing permissions to send message in channel ${channel.id} in guild ${guildID}`);
+    } else if (err.code === 429) { // Rate limited
+      logger.error(`Rate limited while sending message in channel ${channel.id} in guild ${guildID}`);
+    } else {
+      logger.error(`An error occurred while sending the message in channel ${channel.id} in guild ${guildID}: ${err}`);
+    }
+
+    return null;
+  }
+}
+
+/**
+ * Edits an existing message in a specified channel within a guild. The message is modified
+ * to include a newly created embed and attachment, both of which are generated based on the
+ * provided bot settings, server information, and graph URL.
+ *
+ * @param {String} guildID - The ID of the guild where the message is located.
+ * @param {String} serverUUID - The unique identifier for the server associated with the message.
+ * @param {Object} channel - The channel object where the message is posted.
+ * @param {Object} serverCustomizationSettings - Customization settings for the bot's behavior and appearance.
+ * @param {String} graphURL - The URL of the graph to be embedded in the message.
+ * @param {Object} queryState - Information related to the server, such as map, players, etc.
+ * @param {Object} serverInfo - Information related to the server, such as map, players, etc.
+ * @return {Object | null} - The edited message object if successful, or null if an error occurred (e.g., missing permissions, rate-limited).
+ */
+async function editMessage(guildID, serverUUID, channel, serverCustomizationSettings, graphURL, queryState, serverInfo) {
+  logger.debug(`Editing message for guild ${guildID} and server ${serverUUID} in channel: ${channel.id}`);
+  try {
+    const message = await getMessage(channel, guildID, serverCustomizationSettings, serverInfo);
+    const [embed, attachment] = await createEmbed(serverCustomizationSettings, graphURL, queryState);
+    await message.edit({embeds: [embed], files: [attachment]});
+    logger.debug(`Finished editing message for guild ${guildID} and server ${serverUUID} in channel: ${channel.id}`);
+
+    return message;
+  } catch (err) {
+    if (err.message.includes('Missing Permissions')) {
+      logger.error(`Missing permissions to edit message in channel ${channel.id} in guild ${guildID}`);
+    } else if (err.code === 429) { // Rate limited
+      logger.error(`Rate limited while editing message in channel ${channel.id} in guild ${guildID}`);
+    } else {
+      logger.error(`An error occurred while editing the message in channel ${channel.id} in guild ${guildID}: ${err.message}`);
+    }
+
+    return null;
+  }
+}
+
+/**
+ * Queries a server, generates a player graph, and creates/edits an embed.
+ * @param {*} guildID
+ * @param {*} serverUUID
+ * @param {*} serverCustomizationSettings
+ */
+async function queryAndUpdateServer(guildID, serverUUID, serverCustomizationSettings) {
+  const serverInfo = await getServerInfo(guildID, serverUUID);
+  const guild = await getGuild(guildID);
+  const channel = await getChannel(guild, guildID, serverCustomizationSettings);
+  const queryState = await queryServer(guildID, serverUUID, serverCustomizationSettings);
+  // add an if statement to stop generating the graph if the setting is disabled
+  const graphURL = await generateGraph(guildID, serverUUID, serverCustomizationSettings);
+  try {
+    if (serverInfo.data.message_id) {
+      await editMessage(guildID, serverUUID, channel, serverCustomizationSettings, graphURL, queryState, serverInfo);
+    } else {
+      await createMessage(guildID, serverUUID, channel, serverCustomizationSettings, graphURL, queryState);
+    }
+  } catch {
+    logger.warn(`Couldn't read message ID for guild ${guildID} and server ${serverUUID}`);
+    logger.warn(`Creating a new message, for guild ${guildID} in channel ${channel.id}`);
+    await createMessage(guildID, serverUUID, channel, serverCustomizationSettings, graphURL, queryState);
+  }
+}
+
+/**
+ * Validates the server settings to ensure all required fields are present.
+ * @param {*} serverCustomizationSettings
+ * @return {boolean} True if all required settings are present, false otherwise.
+ */
+function areServerSettingsValid(serverCustomizationSettings) {
+  const botSettings = serverCustomizationSettings.bot_settings;
+  const serverSettings = serverCustomizationSettings.server_settings;
+
+  return (
+    botSettings.channel_id &&
+    serverSettings.ip &&
+    serverSettings.connection_port &&
+    serverSettings.query_port &&
+    serverSettings.game &&
+    serverSettings.query_protocol
+  );
+}
+
+/**
+ * Sets up the query and update cycle for all servers in all guilds.
+ */
+async function setupAllServers() {
+  const guilds = Object.keys(await getGuilds());
+  for (const guildID of guilds) {
+    const servers = await getServerUUIDsForGuild(guildID);
+    if (Object.keys(servers.data).length > 0) {
+      const serverPromises = servers.data.map(async (serverUUID) => {
+        if (!initializedServers.has(serverUUID)) {
+          const serverCustomizationSettings = await getServerSettings(guildID, serverUUID);
+          if (areServerSettingsValid(serverCustomizationSettings)) {
+            initializedServers.add(serverUUID);
+            return initializeServerQueryCycle(guildID, serverUUID);
+          } else {
+            logger.warn(`Settings are not valid for guild ${guildID} and server ${serverUUID}`);
+          }
+        }
+      }).filter(Boolean); // Filter out undefined values
+      await Promise.all(serverPromises);
+    }
+  }
+}
+
+/**
+ * Initializes the query and update cycle for a specific server.
+ * @param {*} guildID
+ * @param {*} serverUUID
+ */
+async function initializeServerQueryCycle(guildID, serverUUID) {
+  const serverCustomizationSettings = await getServerSettings(guildID, serverUUID);
+  const refreshInterval = serverCustomizationSettings.bot_settings.refresh_interval;
+
+  await queryAndUpdateServer(guildID, serverUUID, serverCustomizationSettings);
+
+  setInterval(async () => {
+    const startTime = Date.now();
+    await queryAndUpdateServer(guildID, serverUUID, serverCustomizationSettings);
+    const endTime = Date.now();
+    const executionTime = endTime - startTime;
+    logger.debug(`Server ${serverUUID} query execution time: ${executionTime/1000}s`);
+    logger.debug(`Server ${serverUUID}: Waiting ${refreshInterval - executionTime/1000}s before refreshing`);
+  }, refreshInterval * 1000);
+}
 
 client.on('ready', async () => {
-    console.log(`Shard ${client.shard.ids[0]} is ready`);
-    manageServers();
-    setInterval(manageServers, 30 * 1000);
+  await setupAllServers();
+  setInterval(async () => {
+    await setupAllServers();
+  }, 60000);
 });
-
-async function manageServers() {
-    console.log('Getting New Servers')
-    let response = await getGuilds();
-    let guild_info = response.data;
-    const managedGuilds = client.guilds.cache.filter(guild => guild_info[guild.id]);
-
-    console.log(`Shard ${client.shard.ids[0]} is managing ${managedGuilds.size} guild(s)`);
-
-    for (const guild of managedGuilds.values()) {
-        const server_uuids = await getServerUUIDsForGuild(guild.id);
-        
-        for (const server of server_uuids.data) {
-            let response = await getServerDetails(guild.id, server);
-            let server_settings = response.data;
-
-            // Check if the server has been deleted
-            if (!server_settings) {
-                console.log(`Server with UUID ${server} in guild ${guild.id} has been deleted.`);
-                continue;  // Skip to the next server
-            }
-
-            // Convert refresh interval to milliseconds
-            //let interval = server_settings.bot_settings.refresh_interval * 1000;
-            let interval = 30 * 1000;
-
-            // Start an independent interval for each server
-            startInterval(guild.id, server, server_settings, interval);
-        }
-    }
-}
-
-async function startInterval(guild_id, server, server_settings, interval) {
-    serverQueue.push({
-        guild_id,
-        server,
-        server_settings
-    });
-
-    setTimeout(() => startInterval(guild_id, server, server_settings, interval), interval);
-}
-
-async function handleServer(guild_id, server_uuid, server_settings) {
-    console.log('handleServer')
-    try {
-        // Get the guild object
-        const guild = client.guilds.cache.get(guild_id);
-        console.log('getting Guild with Guild ID: ', guild_id)
-
-        console.log('Checking If Guild Exists...')
-
-        // Check if the guild exists
-        if (!guild) {
-            console.log(`Guild ${guild_id} not found`);
-            return;
-        }
-
-        console.log('Guild Exist\'s, moving on!')
-
-        // Get the channel object
-        const channel = guild.channels.cache.get(server_settings.bot_settings.channel_id);
-        console.log('getting Channel with Channel ID: ', server_settings.bot_settings.channel_id)
-
-        console.log('Checking If Channel Exists...')
-        // Check if the channel exists
-        if (!channel) {
-            console.log(`Channel with ID ${server_settings.bot_settings.channel_id} not found in guild ${guild_id}`);
-            return;
-        }
-
-        console.log('Channel Exist\'s, moving on!')
-
-        console.log('Querying Game Server...')
-        // Query the server
-        const { server_info: server_query } = await queryServer(server_settings.server_settings.ip, server_settings.server_settings.query_port,server_settings.server_settings.query_protocol, guild_id, server_uuid);
-
-        console.log('Finished Querying Game Server!')
-
-        // Create the Player Graph
-        if (!server_settings.graph_settings.disable) {
-            console.log('Creating Player Graph!')
-            graph_url = await createGraph(guild_id, server_uuid);
-            console.log('Done! Graph can be found here: ', graph_url)
-        }
-
-        console.log('Attempting to build and send the discord embed')
-
-        let message;
-        if (server_query.message_id === null) {
-            console.log('message_id is null, attempting to send a new one')
-
-            const [embed, attachment] = await createEmbed(server_settings, graph_url, server_query);
-        
-            message = await channel.send({ embeds: [embed], files: [attachment] }).catch(console.error);
-            
-            console.log('New Message Sent! New message_id is: ', message)
-            server_query.message_id = message.id;
-            
-            console.log('Attempting to write new message id to Server Info JSON file!')
-            await writeServerInfo(guild_id, server_uuid, server_query);
-            console.log('New message ID has been written to Server Info JSON file!')
-        } else {
-            let message = null;
-            let attempts = 0;
-            let shouldSendNewMessage = false;
-                        
-            while (!message && attempts < 5) {
-                try {
-                    message = await channel.messages.fetch(server_query.message_id);
-                    const [embed, attachment] = await createEmbed(server_settings, graph_url, server_query);
-                    await message.edit({ embeds: [embed], files: [attachment] }).catch(console.error);
-                } catch (err) {
-                    console.error(`Error fetching message: ${err}`);
-                    if (err instanceof DiscordAPIError) {
-                        console.log(err.code)
-                        if (err.code === 10008) {  // 'Unknown Message' error
-                            console.error('Message not found, it might have been deleted.');
-                            shouldSendNewMessage = true;
-                            break;
-                        } else if (err.code === 50001) {  // 'Missing Access' error
-                            console.error('Bot does not have access to the channel.');
-                            break;
-                        } else if (err.code === 50013) {  // 'Missing Permissions' error
-                            console.error('Bot does not have permission to read the message.');
-                            break;
-                        }
-                        // Add more error codes as needed based on your requirements
-                    }
-            
-                    // If it's a RateLimitError, you can wait for the duration specified by the 'retry_after' property before trying again
-                    if (err instanceof RateLimitError) {
-                        await new Promise(resolve => setTimeout(resolve, err.retry_after * 1000));  // 'retry_after' is in seconds
-                        continue;  // Try again
-                    }
-            
-                    // If it's a HTTPError (like a network error), you can wait for a bit before trying again
-                    if (err instanceof HTTPError) {
-                        await new Promise(resolve => setTimeout(resolve, 1000));  // Wait for 1 second
-                        continue;  // Try again
-                    }
-            
-                    // If it's some other type of error, you might not know how to handle it, so just log it and exit the loop
-                    console.error('Unknown error type, not retrying.');
-                    break;
-                }
-            
-                attempts += 1;
-            }
-        
-            if (!message && shouldSendNewMessage) {
-                console.log('the message is null, sending a new message')
-                console.log('Creating embed...');
-                const [embed, attachment] = await createEmbed(server_settings, graph_url, server_query);
-                console.log('Embed created.');
-                            
-                console.log('Sending message...');
-                message = await channel.send({ embeds: [embed], files: [attachment] }).catch(console.error);
-                console.log('Message sent.');
-
-                console.log('Attempting to write new message id to Server Info JSON file!')
-                server_query.message_id = message.id;
-                await writeServerInfo(guild_id, server_uuid, server_query);
-                console.log('New message ID has been written to Server Info JSON file!')
-            }
-        }
-    } catch (err) {
-        console.error(`Error handling server: ${err}`);
-    }
-}
-
-client.on('error', console.error);
 
 client.login(process.env.BOT_TOKEN);

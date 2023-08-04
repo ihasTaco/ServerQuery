@@ -1,47 +1,102 @@
 const axios = require('axios');
-require('dotenv').config({ path: './.env' });
+const logger = require('../utils/logger');
+require('dotenv').config({path: './.env'});
 
-async function getGuilds(page = 0, pageSize = 10) {
-    const guilds = await axios.get(`${process.env.BACKEND_URL}api/get/bot/guilds`, {
-        params: {
-            page: page,
-            pageSize: pageSize
-        }
+/**
+ *
+ * @return {object}
+ */
+async function getGuilds() {
+  logger.debug(`Fetching guilds`);
+  const guilds = await axios.get(`${process.env.BACKEND_URL}api/get/bot/guilds`);
+  return guilds.data;
+}
+
+/**
+ *
+ * @param {string} guildID
+ * @return {object}
+ */
+async function getServerUUIDsForGuild(guildID) {
+  logger.debug(`Fetching server UUIDs for guild: ${guildID}`);
+  const servers = await axios.get(`${process.env.BACKEND_URL}api/get/bot/${guildID}/servers`, {});
+  return servers;
+}
+
+/**
+ *
+ * @param {string} guildID
+ * @param {string} serverUUID
+ * @return {object}
+ */
+async function getServerSettings(guildID, serverUUID) {
+  logger.debug(`Fetching server details for guild: ${guildID} and server UUID: ${serverUUID}`);
+  const settings = await axios.get(`${process.env.BACKEND_URL}api/get/bot/${guildID}/server/${serverUUID}`, {});
+  return settings.data;
+}
+
+/**
+ *
+ * @param {string} guildID
+ * @param {string} serverUUID
+ * @return {object}
+ */
+async function getServerInfo(guildID, serverUUID) {
+  logger.debug(`Fetching server info for guild: ${guildID} and server UUID: ${serverUUID}`);
+  let serverInfo;
+  try {
+    serverInfo = await axios.get(`${process.env.BACKEND_URL}api/get/bot/${guildID}/serverInfo/${serverUUID}`, {});
+  } catch {
+    logger.warn(`Couldn't find info for guild: ${guildID} and server UUID: ${serverUUID}`);
+    logger.info(`Creating new info for guild: ${guildID} and server UUID: ${serverUUID}`);
+    serverInfo = {'players': 0, 'ping': 0, 'map': null, 'status': null, 'last_restart': null, 'message_id': null};
+    writeServerInfo(guildID, serverUUID, serverInfo);
+  }
+  return serverInfo;
+}
+
+/**
+ *
+ * @param {string} guildID
+ * @param {string} serverUUID
+ * @param {object} queryState
+ */
+async function writeServerInfo(guildID, serverUUID, queryState) {
+  try {
+    logger.debug(`Writing server info for guild: ${guildID} and server UUID: ${serverUUID}`);
+    await axios.post(`${process.env.BACKEND_URL}api/post/write-server-info`, {
+      guildID,
+      serverUUID,
+      queryState,
     });
-    return guilds;
+  } catch (error) {
+    logger.error(`Error writing server info for guild: ${guildID} and server UUID: ${serverUUID}, error: ${error}`);
+  }
 }
-
-async function getServerUUIDsForGuild(guild_id) {
-    const servers = await axios.get(`${process.env.BACKEND_URL}api/get/bot/${guild_id}/servers`, {});
-    return servers;
-}
-
-async function getServerDetails(guild_id, server_uuid) {
-    const details = await axios.get(`${process.env.BACKEND_URL}api/get/bot/${guild_id}/server/${server_uuid}`, {});
-    return details;
-}
-
-async function getServerInfo(guild_id, server_uuid) {
-    const serverInfo = await axios.get(`${process.env.BACKEND_URL}api/get/bot/${guild_id}/serverInfo/${server_uuid}`, {});
-    return serverInfo;
-}
-
-async function writeServerInfo(guild_id, server_uuid, server_info) {
-    try {
-        const response = await axios.post(`${process.env.BACKEND_URL}api/post/write-server-info`, {
-            guild_id,
-            server_uuid,
-            server_info,
-        });
-    } catch (error) {
-        console.error('Error: ', error);
-    }
+/**
+ *
+ * @param {string} guildID
+ * @param {string} serverUUID
+ * @param {object} messageID
+ */
+async function writeMessageID(guildID, serverUUID, messageID) {
+  try {
+    logger.debug(`Writing server info for guild: ${guildID} and server UUID: ${serverUUID}`);
+    await axios.post(`${process.env.BACKEND_URL}api/post/write-message-id`, {
+      guildID,
+      serverUUID,
+      messageID,
+    });
+  } catch (error) {
+    logger.error(`Error writing server info for guild: ${guildID} and server UUID: ${serverUUID}, error: ${error}`);
+  }
 }
 
 module.exports = {
-    getGuilds,
-    getServerUUIDsForGuild,
-    getServerDetails,
-    getServerInfo,
-    writeServerInfo
+  getGuilds,
+  getServerUUIDsForGuild,
+  getServerSettings,
+  getServerInfo,
+  writeServerInfo,
+  writeMessageID,
 };

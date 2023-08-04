@@ -165,7 +165,7 @@ function queueWrite(data, res) {
 }
 
 router.post('/write-server-info', async (req, res) => {
-    const { guild_id, server_uuid, server_info } = req.body;
+    const { guildID, serverUUID, queryState } = req.body;
 
     try {
         let data = null;
@@ -180,6 +180,8 @@ router.post('/write-server-info', async (req, res) => {
                 await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
             }
         }
+
+        console.log(queryState.map);
         
         // If data is still null after 5 attempts, handle the error
         if (!data) {
@@ -188,12 +190,12 @@ router.post('/write-server-info', async (req, res) => {
         
         const jsonData = JSON.parse(data || '{}');
 
-        if (!(guild_id in jsonData)) {
-            jsonData[guild_id] = {};
+        if (!(guildID in jsonData)) {
+            jsonData[guildID] = {};
         }
 
-        if (!(server_uuid in jsonData[guild_id])) {
-            jsonData[guild_id][server_uuid] = {
+        if (!(serverUUID in jsonData[guildID])) {
+            jsonData[guildID][serverUUID] = {
                 map: null,
                 players: [],
                 ping: [],
@@ -203,12 +205,32 @@ router.post('/write-server-info', async (req, res) => {
             };
         }
 
-        jsonData[guild_id][server_uuid].map = server_info.map;
-        jsonData[guild_id][server_uuid].players.push(server_info.active_players);
-        jsonData[guild_id][server_uuid].ping.push(server_info.ping);
-        jsonData[guild_id][server_uuid].status = server_info.status;
-        jsonData[guild_id][server_uuid].last_restart = server_info.last_restart;
-        jsonData[guild_id][server_uuid].message_id = server_info.message_id;
+        jsonData[guildID][serverUUID].map = queryState.map;
+        jsonData[guildID][serverUUID].players.push(queryState.active_players);
+        jsonData[guildID][serverUUID].ping.push(queryState.ping);
+        jsonData[guildID][serverUUID].status = queryState.status;
+        jsonData[guildID][serverUUID].last_restart = queryState.last_restart;
+
+        queueWrite(jsonData, res);
+    } catch (err) {
+        console.log(`Error reading or processing file: ${err}`);
+        res.status(500).send(err.message);
+    }
+});
+
+router.post('/write-message-id', async (req, res) => {
+    const { guildID, serverUUID, messageID } = req.body;
+
+    try {
+        let data = await fs.promises.readFile('./public/server_info.json', 'utf8');
+        
+        const jsonData = JSON.parse(data || '{}');
+
+        if (!(guildID in jsonData) || !(serverUUID in jsonData[guildID])) {
+            return res.status(404).send('Guild or server not found');
+        }
+
+        jsonData[guildID][serverUUID].message_id = messageID;
 
         queueWrite(jsonData, res);
     } catch (err) {
@@ -226,22 +248,22 @@ router.delete('/delete-server', async (req, res) => {
 
     try {
         // Read and parse server_info.json
-        let serverInfoData = JSON.parse(await fs.readFile('./public/server_info.json', 'utf8'));
+        let serverInfoData = JSON.parse(await fs.promises.readFile('./public/server_info.json', 'utf8'));
         // Delete server_uuid
         if (serverInfoData[guild_id]) {
             delete serverInfoData[guild_id][server_uuid];
         }
         // Write the modified data back to server_info.json
-        await fs.writeFile('./public/server_info.json', JSON.stringify(serverInfoData, null, 2));
+        await fs.promises.writeFile('./public/server_info.json', JSON.stringify(serverInfoData, null, 2));
 
         // Read and parse servers.json
-        let serversData = JSON.parse(await fs.readFile('./public/servers.json', 'utf8'));
+        let serversData = JSON.parse(await fs.promises.readFile('./public/servers.json', 'utf8'));
         // Delete server_uuid
         if (serversData[guild_id]) {
             delete serversData[guild_id][server_uuid];
         }
         // Write the modified data back to servers.json
-        await fs.writeFile('./public/servers.json', JSON.stringify(serversData, null, 2));
+        await fs.promises.writeFile('./public/servers.json', JSON.stringify(serversData, null, 2));
 
         res.json({ message: 'Server UUID deleted successfully.' });
     } catch (err) {
