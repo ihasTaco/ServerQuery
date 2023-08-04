@@ -8,6 +8,8 @@ const logger = require('./utils/logger');
 
 const client = new Client({intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds]});
 
+// This keeps track of all the servers intializations, and only allows servers to be initialized once
+const initializedServers = new Set();
 /**
  * Retrieves the guild object from the Discord API using a specified guild ID.
  * If the guild is not found, a warning is logged, and the function returns null.
@@ -144,6 +146,7 @@ async function generateGraph(guildID, serverUUID, serverCustomizationSettings) {
  * @return {Object | null} - The created message object if successful, or null if an error occurred (e.g., missing permissions, rate-limited).
  */
 async function createMessage(guildID, serverUUID, channel, serverCustomizationSettings, graphURL, queryState) {
+  console.log(channel);
   logger.debug(`Creating a new message for guild ${guildID} and server ${serverUUID} in channel: ${channel.id}`);
   let message;
   try {
@@ -203,30 +206,101 @@ async function editMessage(guildID, serverUUID, channel, serverCustomizationSett
   }
 }
 
-client.on('ready', async () => {
+/**
+ * Queries a server, generates a player graph, and creates/edits an embed.
+ * @param {*} guildID
+ * @param {*} serverUUID
+ * @param {*} serverCustomizationSettings
+ */
+async function queryAndUpdateServer(guildID, serverUUID, serverCustomizationSettings) {
+  const serverInfo = await getServerInfo(guildID, serverUUID);
+  const guild = await getGuild(guildID);
+  const channel = await getChannel(guild, guildID, serverCustomizationSettings);
+  const queryState = await queryServer(guildID, serverUUID, serverCustomizationSettings);
+  // add an if statement to stop generating the graph if the setting is disabled
+  const graphURL = await generateGraph(guildID, serverUUID, serverCustomizationSettings);
+  try {
+    if (serverInfo.data.message_id) {
+      await editMessage(guildID, serverUUID, channel, serverCustomizationSettings, graphURL, queryState, serverInfo);
+    } else {
+      await createMessage(guildID, serverUUID, channel, serverCustomizationSettings, graphURL, queryState);
+    }
+  } catch {
+    logger.warn(`Couldn't read message ID for guild ${guildID} and server ${serverUUID}`);
+    logger.warn(`Creating a new message, for guild ${guildID} in channel ${channel.id}`);
+    await createMessage(guildID, serverUUID, channel, serverCustomizationSettings, graphURL, queryState);
+  }
+}
+
+/**
+ * Validates the server settings to ensure all required fields are present.
+ * @param {*} serverCustomizationSettings
+ * @return {boolean} True if all required settings are present, false otherwise.
+ */
+function areServerSettingsValid(serverCustomizationSettings) {
+  const botSettings = serverCustomizationSettings.bot_settings;
+  const serverSettings = serverCustomizationSettings.server_settings;
+
+  return (
+    botSettings.channel_id &&
+    serverSettings.ip &&
+    serverSettings.connection_port &&
+    serverSettings.query_port &&
+    serverSettings.game &&
+    serverSettings.query_protocol
+  );
+}
+
+/**
+ * Sets up the query and update cycle for all servers in all guilds.
+ */
+async function setupAllServers() {
   const guilds = Object.keys(await getGuilds());
-  for (const guild of guilds) {
-    const guildID = guild;
+  for (const guildID of guilds) {
     const servers = await getServerUUIDsForGuild(guildID);
     if (Object.keys(servers.data).length > 0) {
-      for (const server of servers.data) {
-        const serverUUID = server;
-        const serverCustomizationSettings = await getServerSettings(guildID, serverUUID);
-        const serverInfo = await getServerInfo(guildID, serverUUID);
-        const guild = await getGuild(guildID);
-        const channel = await getChannel(guild, guildID, serverCustomizationSettings);
-        const queryState = await queryServer(guildID, serverUUID, serverCustomizationSettings);
-        const graphURL = await generateGraph(guildID, serverUUID, serverCustomizationSettings);
-        if (serverInfo.data.message_id) {
-          await editMessage(guildID, serverUUID, channel, serverCustomizationSettings, graphURL, queryState, serverInfo);
-        } else {
-          await createMessage(guildID, serverUUID, channel, serverCustomizationSettings, graphURL, queryState);
+      const serverPromises = servers.data.map(async (serverUUID) => {
+        if (!initializedServers.has(serverUUID)) {
+          const serverCustomizationSettings = await getServerSettings(guildID, serverUUID);
+          if (areServerSettingsValid(serverCustomizationSettings)) {
+            initializedServers.add(serverUUID);
+            return initializeServerQueryCycle(guildID, serverUUID);
+          } else {
+            logger.warn(`Settings are not valid for guild ${guildID} and server ${serverUUID}`);
+          }
         }
-      }
-    } else {
-      continue;
+      }).filter(Boolean); // Filter out undefined values
+      await Promise.all(serverPromises);
     }
   }
+}
+
+/**
+ * Initializes the query and update cycle for a specific server.
+ * @param {*} guildID
+ * @param {*} serverUUID
+ */
+async function initializeServerQueryCycle(guildID, serverUUID) {
+  const serverCustomizationSettings = await getServerSettings(guildID, serverUUID);
+  const refreshInterval = serverCustomizationSettings.bot_settings.refresh_interval;
+
+  await queryAndUpdateServer(guildID, serverUUID, serverCustomizationSettings);
+
+  setInterval(async () => {
+    const startTime = Date.now();
+    await queryAndUpdateServer(guildID, serverUUID, serverCustomizationSettings);
+    const endTime = Date.now();
+    const executionTime = endTime - startTime;
+    logger.debug(`Server ${serverUUID} query execution time: ${executionTime/1000}s`);
+    logger.debug(`Server ${serverUUID}: Waiting ${refreshInterval - executionTime/1000}s before refreshing`);
+  }, refreshInterval * 1000);
+}
+
+client.on('ready', async () => {
+  await setupAllServers();
+  setInterval(async () => {
+    await setupAllServers();
+  }, 60000);
 });
 
 client.login(process.env.BOT_TOKEN);
