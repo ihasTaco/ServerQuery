@@ -85,9 +85,35 @@ router.get('/generate-uuid/:guild_id', (req, res) => {
 
         fs.writeFile('./public/servers.json', JSON.stringify(servers, null, 2), 'utf8', (err) => {
             if (err) throw err;
-            res.json({ server_uuid })
         });
     });
+
+    fs.readFile('./public/server_info.json', 'utf8', (err, data) => {
+        if (err) throw err;
+
+        const serverInfo = JSON.parse(data || '{}');
+
+        // Check if guild ID and server UUID are present, and initialize with default settings if not
+        if (!serverInfo[guild_id]) {
+            serverInfo[guild_id] = {};
+        }
+        if (!serverInfo[guild_id][server_uuid]) {
+            serverInfo[guild_id][server_uuid] = {
+                'players': [], 
+                'ping': [], 
+                'map': null, 
+                'status': null, 
+                'last_restart': null, 
+                'message_id': null
+            };
+        }
+
+        fs.writeFile('./public/server_info.json', JSON.stringify(serverInfo, null, 2), 'utf8', (err) => {
+            if (err) throw err;
+        });
+    });
+    
+    res.json({ server_uuid })
 });
 
 router.get('/servers/:guildId', (req, res) => {
