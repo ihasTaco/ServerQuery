@@ -1,13 +1,3 @@
-> Temporary Halt In Progress
->
-> I'd like to inform all users and contributors of ServerQuery that starting this Friday (7/4/23), I will be taking a short vacation for the next week. During this period, I will not be available to address issues, review pull requests, or make progress on planned features.
->
-> Please feel free to continue using ServerQuery, reporting issues, and making contributions. While I won't be able to immediately respond or take action, I will review everything once I return from my break.
->
-> I appreciate your understanding and patience during this time. It's vital to take a step back and rest occasionally, and I promise to come back refreshed and ready to make ServerQuery even better!
->
-> Thank you for your support, and see you in a week!
-
 # ServerQuery
 ![GitHub all releases](https://img.shields.io/github/downloads/ihasTaco/ServerQuery/total)
 ![GitHub contributors](https://img.shields.io/github/contributors/ihasTaco/ServerQuery)
